@@ -105,8 +105,7 @@ def login():
 	form = LoginForm(request.form)
 	if form.validate_on_submit():
 		stored_user = DB.get_user(form.loginemail.data)
-		if stored_user and 
-		PH.validate_password(
+		if stored_user and PH.validate_password(
 			form.loginpassword.data,
 			stored_user['salt'], stored_user['hashed']
 		):
