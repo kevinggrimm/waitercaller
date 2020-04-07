@@ -6,7 +6,12 @@ from flask_login import login_user, logout_user, current_user, login_required
 
 from app import app, login
 from app.forms import RegistrationForm, LoginForm, CreateTableForm
-from app.models import MockDBHelper as DBHelper
+
+if config.test:
+	from app.models import MockDBHelper as DBHelper
+else: 
+	from app.models import DBHelper 
+
 from app.models import MOCK_USERS, User
 
 from app.passwordhelper import PasswordHelper
@@ -77,8 +82,9 @@ def account_deletetable():
 
 @app.route("/newrequest/<tid>")
 def new_request(tid):
-	DB.add_request(tid, datetime.datetime.now())
-	return "Your request has been logged and a waiter will be with you shortly"
+	if DB.add_request(tid, datetime.datetime.now()):
+		return "Your request has been logged and a waiter will be with you shortly"
+	return "There is already a request pending for this table. Please be patient, a waiter will be there ASAP"
 
 
 @app.route("/dashboard")
